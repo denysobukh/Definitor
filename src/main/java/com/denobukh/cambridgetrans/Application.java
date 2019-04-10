@@ -96,7 +96,7 @@ public class Application {
                 System.out.print(progress(word));
             }
             System.out.print(progress());
-
+            bufferedWriter.close();
         } catch (IOException e) {
             System.out.println(e.getLocalizedMessage());
             System.exit(-1);

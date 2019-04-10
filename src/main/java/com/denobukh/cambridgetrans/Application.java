@@ -113,7 +113,8 @@ public class Application {
             return String.format("\rTranslated: %-2d Missed: %-2d Total: %-2d                                ",
                     translated, miss, total);
         } else {
-            return String.format("\rTranslated: %-2d Missed: %-2d Total: %-2d [%s]", translated, miss, total, word[0]);
+            return String.format("\rTranslated: %-2d Missed: %-2d Total: %-2d [%s]                           ",
+                    translated, miss, total, word[0]);
         }
     }
 

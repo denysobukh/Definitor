@@ -1,7 +1,7 @@
-<h1>Cambridge dictionary words definitions finder </h1>
-
-The tool takes line by line words from the input file, finds their definitions in Cambridge dictionary and puts 
-them into the output file.
+<h1>English words definition finder</h1>
+Command line tool for finding English words definitions in Cambridge dictionary. 
+Takes line by line words from the input file, loads their definitions from the website and puts 
+them into file.
 
 Usage:
 ```

@@ -19,7 +19,6 @@ public class Application {
 
     public static void main(String[] args) {
         Option inOpt = Option.builder("i").required().hasArg().desc("input file").build();
-        Option outOpt = Option.builder("o").hasArg().desc("output file").build();
         Option sortOpt =
                 Option.builder("s").longOpt("sort").desc("sort the words in the alphabetical order").build();
         Option mdOpt =
@@ -30,7 +29,6 @@ public class Application {
         Options options = new Options();
         options
                 .addOption(inOpt)
-                .addOption(outOpt)
                 .addOption(sortOpt)
                 .addOption(mdOpt)
                 .addOption(meOpt);
@@ -78,20 +76,6 @@ public class Application {
     }
 
     /**
-     * Writes the content of the {@code StringBuilder} to a file
-     * @param name of the file to be written
-     * @param outputBuilder {@code StringBuilder} with the content
-     * @throws IOException thrown if unable to write
-     */
-    private void writeFile(String name, StringBuilder outputBuilder) throws IOException {
-        try (
-                FileWriter fileWriter = new FileWriter(new File(name), false);
-                BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-                Writer writer = bufferedWriter.append(outputBuilder.toString())) {
-        }
-    }
-
-    /**
      * Basic worker method:
      * loads lines from input file,
      * loads their definitions from the service,
@@ -135,11 +119,7 @@ public class Application {
         }
         if (cmd.hasOption("o")) System.out.print(progress(foundCount, missCount, totalCount));
 
-        if (cmd.hasOption("o")) {
-            writeFile(cmd.getOptionValue("o"), outputBuilder);
-        } else {
-            System.out.print(outputBuilder);
-        }
+        System.out.print(outputBuilder);
 
         System.out.println();
         if (missWords.size() > 0) {

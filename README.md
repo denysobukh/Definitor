@@ -5,12 +5,11 @@ them into file.
 
 Usage:
 ```
-definitor -i <file> [-o <file>] [-md] [-me] [-s]
+definitor -i <file> [-md] [-me] [-s]
 
  -i <arg>                     input file
  -md,--multiple-definitions   load multiple definitions for each word
  -me,--multiple-examples      load examples for each definition
- -o <arg>                     output file
  -s,--sort                    sort the words in the alphabetical order
 
 ```

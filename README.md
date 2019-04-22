@@ -1,6 +1,6 @@
 <h1>English words definition finder</h1>
 Command line tool for finding English words definitions in Cambridge dictionary. 
-Takes line by line words from the input file, loads their definitions from the website and puts 
+Takes words line by line from the input file, removes duplicates, loads their definitions from the website and puts 
 them into file.
 
 Usage:

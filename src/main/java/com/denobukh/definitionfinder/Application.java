@@ -1,4 +1,4 @@
-package com.denobukh.cambridgetrans;
+package com.denobukh.definitionfinder;
 
 import org.apache.commons.cli.*;
 import org.jsoup.Jsoup;
@@ -6,7 +6,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -84,8 +86,8 @@ public class Application {
      *
      * @param cmd arguments wich were specified during call from the command line
      * @throws IOException is thrown if input file can not be loaded,
-     * definition can not be accessed,
-     * output file can not be written
+     *                     definition can not be accessed,
+     *                     output file can not be written
      */
     private void run(CommandLine cmd) throws IOException {
         StringBuilder outputBuilder = new StringBuilder();
@@ -131,9 +133,9 @@ public class Application {
      * Composes status line string to depict the progress
      *
      * @param translated words number
-     * @param notfound words number which were not found
-     * @param total words number
-     * @param word current word
+     * @param notfound   words number which were not found
+     * @param total      words number
+     * @param word       current word
      * @return status line
      */
     private String progress(int translated, int notfound, int total, String... word) {
@@ -162,9 +164,8 @@ public class Application {
         }
 
         /**
-         *
          * @param multipleDefinitions if {@code true} multiple definitions is loaded, if {@code false} a first one only
-         * @param multipleExamples if {@code true} multiple examples is loaded, if {@code false} a first one only
+         * @param multipleExamples    if {@code true} multiple examples is loaded, if {@code false} a first one only
          * @return {@code WordDefinition} with result or
          * @throws IOException is thrown when connection error
          */
@@ -196,11 +197,10 @@ public class Application {
                     Elements phraseBlocks = doc.getElementsContainingOwnText(word);
                     for (Element e :
                             phraseBlocks) {
-                        if(e.text().equals(word)) {
+                        if (e.text().equals(word)) {
                             do {
                                 e = e.parent();
-                            } while (!e.hasClass("phrase-block") || doc.children().first().equals(e));
-                            parent = e;
+                            } while (e != null && (!e.hasClass("phrase-block") || doc.children().first().equals(e)));
                             break;
                         }
                     }
@@ -218,7 +218,7 @@ public class Application {
                     String meaning = defElement.select("p.def-head b.def").text().trim();
                     if (meaning.endsWith(":")) meaning = meaning.substring(0, meaning.length() - 1);
 
-                    wordMeanings.append(meaning);
+                    wordMeanings.append(meaning.trim());
 
                     Elements examplesHTML = defElement.select("div.examp");
                     for (Element ee : examplesHTML) {
@@ -257,13 +257,13 @@ public class Application {
                 List<String> examples = e.getValue();
 
                 if (meaning.equals(firstMeaning)) {
-                    sb.append(String.format("%-12s ● %s ", word, meaning));
+                    sb.append(String.format("%-12s ● %s", word, meaning));
                 } else {
-                    sb.append(String.format("%-12s ● %s ", "", meaning));
+                    sb.append(String.format("%-12s ● %s", "", meaning));
                 }
 
                 if (examples.size() > 0)
-                    sb.append(String.format("(Usage: %s)", String.join("  ", examples)));
+                    sb.append(String.format(" (Usage: %s)", String.join("  ", examples)));
                 sb.append(String.format("%n"));
             });
             sb.append(String.format("%n"));

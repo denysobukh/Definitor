@@ -4,7 +4,6 @@
 
 Feed it a list of words, get back clean, formatted definitions with usage examples.
 
----
 
 ## Features
 
@@ -15,7 +14,6 @@ Feed it a list of words, get back clean, formatted definitions with usage exampl
 - **Usage examples** — include example sentences for each definition
 - **Sorted output** — optional alphabetical sorting of results
 
----
 
 ## Requirements
 
@@ -23,7 +21,6 @@ Feed it a list of words, get back clean, formatted definitions with usage exampl
 - **Maven 3.x** (for building from source)
 - Internet connection (live lookups via Cambridge Dictionary)
 
----
 
 ## Installation
 
@@ -89,7 +86,6 @@ ubiquitous   ● seeming to be found everywhere (Usage: Smartphones are now ubiq
 
 Words that could not be looked up are reported at the end.
 
----
 
 ## Architecture
 

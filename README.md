@@ -41,7 +41,6 @@ The resulting JAR will be at `target/definitionfinder-1.0-SNAPSHOT.jar`.
 java -jar target/definitionfinder-1.0-SNAPSHOT.jar -i words.txt
 ```
 
----
 
 ## Usage
 
@@ -111,7 +110,6 @@ Application.java
 | [Apache Commons CLI](https://commons.apache.org/proper/commons-cli/) 1.4 | Command-line argument parsing |
 | [JUnit 5](https://junit.org/junit5/) 5.4.2 | Testing (test scope) |
 
----
 
 ## Testing
 
@@ -121,7 +119,6 @@ mvn test
 
 Test resources are located under `src/test/resources/` and include several word-list fixtures.
 
----
 
 ## Limitations
 
@@ -129,7 +126,6 @@ Test resources are located under `src/test/resources/` and include several word-
 - **Live scraping only** — definitions are fetched in real-time; there is no offline cache
 - **Single-threaded** — words are processed sequentially
 
----
 
 ## License
 

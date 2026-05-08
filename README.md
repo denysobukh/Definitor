@@ -24,25 +24,27 @@ Feed it a list of words, get back clean, formatted definitions with usage exampl
 
 ## Installation
 
+### Download
+
+Grab the latest pre-built JAR from the [Releases](https://github.com/denysobukh/Definitor/releases) page.
+
+```bash
+java -jar definition-finder.jar -i words.txt
+```
+
 ### Build from source
 
 ```bash
 mvn clean package
 ```
 
-The resulting JAR will be at `target/definitionfinder-1.0-SNAPSHOT.jar`.
-
-### Quick start
-
-```bash
-java -jar target/definitionfinder-1.0-SNAPSHOT.jar -i words.txt
-```
+The resulting fat JAR (with all dependencies bundled) will be at `target/definitionfinder.jar`.
 
 
 ## Usage
 
 ```
-java -jar definitionfinder-1.0-SNAPSHOT.jar -i <file> [-s] [-md] [-me]
+java -jar definitionfinder.jar -i <file> [-s] [-md] [-me]
 ```
 
 ### Options
@@ -69,10 +71,10 @@ serendipity
 
 ```bash
 # Basic lookup
-java -jar definitionfinder-1.0-SNAPSHOT.jar -i words.txt
+java -jar definitionfinder.jar -i words.txt
 
 # All definitions with examples, sorted
-java -jar definitionfinder-1.0-SNAPSHOT.jar -i words.txt -md -me -s
+java -jar definitionfinder.jar -i words.txt -md -me -s
 ```
 
 ### Output format

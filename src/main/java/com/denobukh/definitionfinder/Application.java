@@ -1,7 +1,6 @@
 package com.denobukh.definitionfinder;
 
 import org.apache.commons.cli.*;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -39,7 +38,7 @@ public class Application {
 
         try {
             CommandLine cmd = parser.parse(options, args);
-            new Application().run(cmd);
+            new Application().run(cmd, new HttpPageFetcher());
         } catch (MissingOptionException e) {
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("definitor -i <file> [-o <file>] [-md] [-me] [-s]", options);
@@ -85,11 +84,12 @@ public class Application {
      * displays the progress.
      *
      * @param cmd arguments wich were specified during call from the command line
+     * @param pageFetcher the fetcher used to obtain HTML pages from the dictionary
      * @throws IOException is thrown if input file can not be loaded,
      *                     definition can not be accessed,
      *                     output file can not be written
      */
-    private void run(CommandLine cmd) throws IOException {
+    public void run(CommandLine cmd, PageFetcher pageFetcher) throws IOException {
         StringBuilder outputBuilder = new StringBuilder();
         List<String> lines = loadFile(cmd.getOptionValue("i"));
 
@@ -106,7 +106,7 @@ public class Application {
         for (String line : lines) {
             if (cmd.hasOption("o")) progress(foundCount, missCount, totalCount, line);
 
-            WordDefinition definition = new WordDefinition(line).load(cmd.hasOption("md"), cmd.hasOption("me"));
+            WordDefinition definition = new WordDefinition(line).load(pageFetcher, cmd.hasOption("md"), cmd.hasOption("me"));
 
             if (definition == null) {
                 missWords.add(line);
@@ -164,58 +164,27 @@ public class Application {
         }
 
         /**
+         * @param pageFetcher         the fetcher used to obtain HTML pages
          * @param multipleDefinitions if {@code true} multiple definitions is loaded, if {@code false} a first one only
          * @param multipleExamples    if {@code true} multiple examples is loaded, if {@code false} a first one only
          * @return {@code WordDefinition} with result or
          * @throws IOException is thrown when connection error
          */
-        WordDefinition load(boolean multipleDefinitions, boolean multipleExamples) throws IOException {
+        WordDefinition load(PageFetcher pageFetcher, boolean multipleDefinitions, boolean multipleExamples) throws IOException {
 
             String url = BASIC_URL + "/english/" + URLEncoder.encode(word, StandardCharsets.UTF_8);
-            Document doc = Jsoup.connect(url)
-                    .userAgent("Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
-                    .referrer(BASIC_URL)
-                    .get();
+            Document doc = pageFetcher.fetch(url);
 
 
             Elements senseBodyHTML = doc.select("div.dictionary:first-of-type div.sense-body");
             if (senseBodyHTML.size() > 0) {
 
-                Elements definitionHTML;
-                Element parent = null;
-
-
-                /*
-                if the multiple words are found in the line
-                treats it as a phrase
-                looks for the phrase match
-                traverses through the parents elements forward the root
-                until the definition block is found
-                */
-                boolean isPhrase = word.contains(" ");
-                if (isPhrase) {
-                    Elements phraseBlocks = doc.getElementsContainingOwnText(word);
-                    for (Element e :
-                            phraseBlocks) {
-                        if (e.text().equals(word)) {
-                            do {
-                                e = e.parent();
-                            } while (e != null && (!e.hasClass("phrase-block") || doc.children().first().equals(e)));
-                            break;
-                        }
-                    }
-                }
-                if (parent == null) {
-                    definitionHTML = senseBodyHTML.select("div.def-block");
-                } else {
-                    definitionHTML = new Elements();
-                    definitionHTML.add(parent);
-                }
+                Elements definitionHTML = senseBodyHTML.select("div.def-block");
 
 
                 // extract definitions and usage examples into WordDefinition
                 for (Element defElement : definitionHTML) {
-                    String meaning = defElement.select("p.def-head b.def").text().trim();
+                    String meaning = defElement.select("div.def.ddef_d.db").text().trim();
                     if (meaning.endsWith(":")) meaning = meaning.substring(0, meaning.length() - 1);
 
                     wordMeanings.append(meaning.trim());
